@@ -4,9 +4,10 @@ import httplib2
 from BeautifulSoup import BeautifulSoup
 
 http = httplib2.Http()
-
+username=raw_input("LDAP ID: ").strip()
+password=raw_input("Password: ").strip()
 url = 'http://asc.iitb.ac.in/academic/commjsp/ldaplogin.jsp'   
-body = {'user': 'saket.kumar', 'pass': 'thisisit1314.'}
+body = {'user': username, 'pass': password}
 headers = {'Content-type': 'application/x-www-form-urlencoded'}
 response, content = http.request(url, 'POST', headers=headers, body=urllib.urlencode(body))
 #print response['set-cookie']
@@ -18,20 +19,32 @@ headers = {'Host': 'asc.iitb.ac.in','User-Agent': 'Mozilla/5.0 (X11; Linux i686;
 #url="http://libsuite.library.iitb.ac.in/iitlibdata/webopac8/opac_ldap.php?nameid=09D02007"
 url = 'http://libsuite.library.iitb.ac.in/iitlibdata/webopac8/l_renew.php?fromASC=Y&m_mem_id=09D02007&m_location_cd=1'   
 response, content = http.request(url, 'POST', headers=headers)
-#print response
 scraped_output = BeautifulSoup(content)
-#print scraped_output
-#comment = commentSoup.find(text=re.compile("nice"))
-#print scraped_output
-p= re.compile("<font face=\"Arial\" size=\"2\">.*<\/font>")#\([A-Z&]\S*\s*\)+<\/font>")
-#p= re.compile("<font face=\"Arial\" size=\"2\" color=\"black\">\d\d\/\d\d\/\d\d\d\d<\/font>")
-s= p.findall(content)
-#s= scraped_output.findAll(text=re.compile("\d\d\/\d\d/\d\d\d\d")) 
-#<font face="Arial" size="2" color="black">10/11/2011</font>
-print s
+re_for_books = re.compile("<font face=\"Arial\" size=\"2\">.*<\/font>")#\([A-Z&]\S*\s*\)+<\/font>")
+re_for_dates = re.compile("\d\d\/\d\d\/\d\d\d\d")
+
+all_dates = scraped_output.findAll(text=re.compile("\d\d\/\d\d/\d\d\d\d"))# re_for_dates.findall(content)
+all_books = re_for_books.findall(content)
+for i in range(0,len(all_dates)):
+    all_dates[i]=all_dates[i].replace("<font color=\"blue\" size=\"1\">New Due Date will be = " , "")
+    all_dates[i]=all_dates[i].replace("</font>","")
+    all_dates[i]=all_dates[i].replace("<br>","")
+for i in range(0,len(all_books)):
+    all_books[i]=all_books[i].replace("<font face=\"Arial\" size=\"2\">","")
+    all_books[i]=all_books[i].replace("</font>","")
+all_info={'Book': ['Due_Date','New_Due_Date','Issue_Date']}
+
+i = 0
+for book in all_books:
+    all_info[book]=[all_dates[i],all_dates[i+1],all_dates[i+2]]
+    i=i+1
+print "Book", all_info["Book"][0],all_info["Book"][1],all_info["Book"][2]
+
+for info in  all_info:
+    if info!="Book":
+        print info,all_info[info][0] ,all_info[info][1], all_info[info][2] 
 #for t in s:
    #print t
-#ns= scraped_output.findAll("table",border=0)
 #for t in s:
  #   print t
   #  print "#############################"
