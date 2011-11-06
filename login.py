@@ -14,8 +14,8 @@ response, content = http.request(url, 'POST', headers=headers, body=urllib.urlen
 url_location = response['location']
 splitted=url_location.split("&")
 roll_no=splitted[1].split("=")[1]
-headers = {'Host': 'asc.iitb.ac.in','User-Agent': 'Mozilla/5.0 (X11; Linux i686; rv:7.0.1) Gecko/20100101 Firefox/7.0.1', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8','Accept-Language': 'en-us,en;q=0.5', 'Accept-Encoding': 'gzip, deflate','Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.7','Connection':	'keep-alive', 'Referer':'	http://asc.iitb.ac.in/academic/commjsp/displayURL.jsp?username=saket.kumar&code=09D02007&emptype=S','Cookie': response['set-cookie']}
-
+dispurl='http://asc.iitb.ac.in/academic/commjsp/displayURL.jsp?username='+username+'&code='+roll_no+'&emptype=S'
+headers = {'Host': 'asc.iitb.ac.in','User-Agent': 'Mozilla/5.0 (X11; Linux i686; rv:7.0.1) Gecko/20100101 Firefox/7.0.1', 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8','Accept-Language':'en-us,en;q=0.5', 'Accept-Encoding': 'gzip, deflate','Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.7','Connection':	'keep-alive','Referer':dispurl,'Cookie': response['set-cookie']}
 #print headers
 #url="http://asc.iitb.ac.in/academic/utility/middlecas.jsp?loginCode=09D02007&loginnumber=09D02007&loginName=Saket%20Kumar%20Choudhary&Home=ascwebsite"
 #url="http://asc.iitb.ac.in/academic/utility/middlecas.jsp?loginCode=09D02007&loginnumber=09D02007&loginName=Saket%20Kumar%20Choudhary&Home=ascwebsite"
