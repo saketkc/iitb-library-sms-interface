@@ -24,8 +24,10 @@ url ='http://libsuite.library.iitb.ac.in/iitlibdata/webopac8/l_renew.php?fromASC
 response, content = http.request(url, 'POST', headers=headers)
 scraped_output = BeautifulSoup(content)
 re_for_books = re.compile("<font face=\"Arial\" size=\"2\">.*<\/font>")#\([A-Z&]\S*\s*\)+<\/font>")
+re_for_fine =  re.compile("<font face=\"Arial\" size=\"2\" color=\"red\">.*<\/font>")
 re_for_dates = re.compile("\d\d\/\d\d\/\d\d\d\d")
-
+fine= re_for_fine.findall(content)
+print fine
 all_dates = scraped_output.findAll(text=re.compile("\d\d\/\d\d/\d\d\d\d"))# re_for_dates.findall(content)
 all_books = re_for_books.findall(content)
 for i in range(0,len(all_dates)):
@@ -36,7 +38,8 @@ for i in range(0,len(all_books)):
     all_books[i]=all_books[i].replace("<font face=\"Arial\" size=\"2\">","")
     all_books[i]=all_books[i].replace("</font>","")
 all_info={'Book': ['Due_Date','New_Due_Date','Issue_Date']}
-
+print all_books
+"""
 i = 0
 for book in all_books:
     all_info[book]=[all_dates[i],all_dates[i+1],all_dates[i+2]]
@@ -46,3 +49,4 @@ print "Book", all_info["Book"][0],all_info["Book"][1],all_info["Book"][2]
 for info in  all_info:
     if info!="Book":
         print info,all_info[info][0] ,all_info[info][1], all_info[info][2]
+        """
