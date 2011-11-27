@@ -1,8 +1,13 @@
 import re
 import urllib
 import httplib2
+import mechanize
+import urllib2
+import cookielib
 from BeautifulSoup import BeautifulSoup
 from grades import get_grades
+from gstats_scrap import gstats
+from moodle import moodle_updates
 from flask import Flask
 from flask import render_template
 def library_data(username,password):
@@ -41,7 +46,10 @@ def library_data(username,password):
 	    all_books[i]=all_books[i].replace("<font face=\"Arial\" size=\"2\">","")
 	    all_books[i]=all_books[i].replace("</font>","")
 	all_info={'Book': ['Due_Date','New_Due_Date','Issue_Date']}
-	return all_books
+	returnvalues="Book:"
+	for i in range (0,len(all_books)):
+	    returnvalues+=all_books[i]+" "+all_dates[i]
+	return returnvalues
 	"""
 	i = 0
 	for book in all_books:
@@ -65,6 +73,11 @@ def get_library_details(username,password):
 @app.route("/grades/<username>/<password>/<semester>")
 def get_grades_details(username,password,semester):
     return get_grades(username,password,int(semester))
-
+@app.route("/gstats/<dept>/<code>/<year>")
+def return_grading_statistics(dept,code,year):
+    return gstats(dept,code,year)
+@app.route("/moodle/<username>/<password>")
+def get_moodle_updates(username,password):
+    return moodle_updates(username,password)
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run('10.5.10.12',debug=True)

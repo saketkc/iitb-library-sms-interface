@@ -52,5 +52,5 @@ def get_grades(username,password,semester):
 				count = 0
 
 	return grades
-
-print get_grades("saket.Kumar","thisisit1314.",2)
+if __name__=="__main__":
+    print get_grades("saket.Kumar","thisisit1314.",2)
