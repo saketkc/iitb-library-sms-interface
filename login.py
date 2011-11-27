@@ -4,8 +4,8 @@ import httplib2
 from BeautifulSoup import BeautifulSoup
 
 http = httplib2.Http()
-username=raw_input("LDAP ID: ").strip()
-password=raw_input("Password: ").strip()
+username="saket.kumar"#"prashant7892"#raw_input("LDAP ID: ").strip()
+password="thisisit1314." #raw_input("Password: ").strip()
 url = 'http://asc.iitb.ac.in/academic/commjsp/ldaplogin.jsp'   
 body = {'user': username, 'pass': password}
 headers = {'Content-type': 'application/x-www-form-urlencoded'}
@@ -23,13 +23,16 @@ headers = {'Host': 'asc.iitb.ac.in','User-Agent': 'Mozilla/5.0 (X11; Linux i686;
 url ='http://libsuite.library.iitb.ac.in/iitlibdata/webopac8/l_renew.php?fromASC=Y&m_mem_id='+roll_no+'&m_location_cd=1'   
 response, content = http.request(url, 'POST', headers=headers)
 scraped_output = BeautifulSoup(content)
-re_for_books = re.compile("<font face=\"Arial\" size=\"2\">.*<\/font>")#\([A-Z&]\S*\s*\)+<\/font>")
+re_for_books=re.compile("<td bgcolor=\"white\">.*<\/td>")
+                
+#re_for_books = re.compile("<font face=\"Arial\" size=\"2\">.*<\/font>")#\([A-Z&]\S*\s*\)+<\/font>")
 re_for_fine =  re.compile("<font face=\"Arial\" size=\"2\" color=\"red\">.*<\/font>")
 re_for_dates = re.compile("\d\d\/\d\d\/\d\d\d\d")
 fine= re_for_fine.findall(content)
-print fine
+#print fine
 all_dates = scraped_output.findAll(text=re.compile("\d\d\/\d\d/\d\d\d\d"))# re_for_dates.findall(content)
 all_books = re_for_books.findall(content)
+print all_books
 for i in range(0,len(all_dates)):
     all_dates[i]=all_dates[i].replace("<font color=\"blue\" size=\"1\">New Due Date will be = " , "")
     all_dates[i]=all_dates[i].replace("</font>","")
@@ -38,7 +41,7 @@ for i in range(0,len(all_books)):
     all_books[i]=all_books[i].replace("<font face=\"Arial\" size=\"2\">","")
     all_books[i]=all_books[i].replace("</font>","")
 all_info={'Book': ['Due_Date','New_Due_Date','Issue_Date']}
-print all_books
+print 
 """
 i = 0
 for book in all_books:

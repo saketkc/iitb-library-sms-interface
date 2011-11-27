@@ -2,6 +2,7 @@ import re
 import urllib
 import httplib2
 from BeautifulSoup import BeautifulSoup
+from grades import get_grades
 from flask import Flask
 from flask import render_template
 def library_data(username,password):
@@ -61,5 +62,9 @@ def get_library_details(username,password):
     #print password
     
     return library_data(username,password)#"T"  #render_template('hello.html',name='Test')
+@app.route("/grades/<username>/<password>/<semester>")
+def get_grades_details(username,password,semester):
+    return get_grades(username,password,int(semester))
+
 if __name__ == "__main__":
     app.run(debug=True)
