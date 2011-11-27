@@ -1,0 +1,146 @@
+\documentclass[]{beamer}
+% Class options include: notes, notesonly, handout, trans,
+%                        hidesubsections, shadesubsections,
+%                        inrow, blue, red, grey, brown
+
+% Theme for beamer presentation.
+\usepackage{amsmath}
+\usepackage{cclicenses}
+\usepackage{beamerthemeshadow} 
+\usepackage{ragged2e} 
+\usepackage{lipsum} 
+\usepackage{color}
+\beamertemplatenavigationsymbolsempty
+\beamertemplatenavigationsymbolsempty 
+
+% Other themes include: beamerthemebars, beamerthemelined, 
+%                       beamerthemetree, beamerthemetreebars  
+
+\title{AE 663:SDES\\
+ASC SMS Interface\\}    % Enter your title between curly braces
+\author[Avnish,Giri,Saket,Pushkar]{}
+\institute[Aerospace Engineering Department]{
+  \begin{tabular} { l c}
+  09001007 & Avnish Kumar\\
+  09001008 & Giri Prashant\\                                                                                                                   
+  09D02007 & Saket Choudhary\\
+  09D01005 & Pushkar Godbole \\
+  Group & 1\\
+   \end{tabular}
+  }
+
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Aim of the project}   
+    \begin{itemize}
+	\justifying
+	\item \color{green} Grade notification app \color{black} : which will notify a student about his grade whenever it is updated on ASC
+	\item \color{green} Grading statistics app \color{black} : which will sms the grading statistics of a course for a particular year when an sms request is sent
+	\item \color{green} Library fine app \color{black} : which will give timely reminders via sms, to the student as the book return due date approaches
+	\item \color{green} Moodle update app \color{black} : which will send a notification sms to students on upload of a new lecture in any of the registered courses
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{The cake :)}   
+  	\begin{itemize}
+	\justifying
+	\item  The grade notification app sends the present status of the grades on an sms request. Automation was not implemented as admin read-only access to the asc
+ website was not available.
+	\item The grading stats app works as planned; sending the grading statistics of a course when the course code and year are smsed to it.
+	\item Similar to the grade notification app, the library fine app gives the present status of dues and fines on an sms request.
+	\item The moodle update app sends an update of all the new uploads in all the registered courses on moodle, upon request.
+  	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Difficulties Faced}   
+  	\begin{itemize}
+	\justifying
+	\item Lack of admin read-only access to ASC and moodle prevented the automation of smses. Polling 8000 accounts, the only other option was too inefficient to implement.
+	\item The interfacing between the python code and the smsing interface (textweb) was not very clearly explained. Understanding the communication between the sites and using their API was time consuming.
+	\item Proxy resolution and LDAP authentication posed major challenges.
+	\item Being behind proxy, the sms interface could not directly access ASC. Hence re-routing was required for the library and grading stats apps.
+This was achieved by placing a php script in homepages.iitb.ac.in. This acts as a node between textweb and ASC.
+  	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{SMS interface (TEXTWEB)}   
+  	\begin{itemize}
+	\justifying
+	\item The aim of this is to get an input from the user and send an output back to him through sms
+	\item The google app engine has been used for hosting the code with intefacing with txtweb
+	\item This code extracts the information a user sends through the url of the request sent to it
+
+  	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Grade notification}   
+  	\begin{itemize}
+	\justifying
+	\item This code will get the grade for a specified semester of a student when given the username and password
+	\item The code scrapes the external asc site and extracts the required information 
+	\item It uses the modules re,httplib2,beautiful soup. 
+	
+  	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Grading stats}   
+  	\begin{itemize}
+	\justifying
+	\item Function ''gstats'' takes a string like 'AE 663 2011' as arguement and returns a string containing the grading statistics for AE 663 for year 2011 as output.
+	\item Packages used : httplib, string
+	\item \color{green}asc.iitb.ac.in \color{black} uses get method for every page. This simplified the process of finding a particular grading statistics
+	\item The code generates the required url $\rightarrow$ checks whether and in which semester the course was offered $\rightarrow$ scraps the grading page $\rightarrow$ generates the output.
+  	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Library fine}   
+  	\begin{itemize}
+	\justifying
+	\item Take the LDAP username and password from user through SMS. 
+	\item asc.iitb.ac.in has implemented frames. The exact urls to which  the login details are submitted is http://asc.iitb.ac.in/academic/commjsp/ldaplogin.jsp. This made the work alot easier.
+	\item The main challenge was scraping! We used httplib2,re for pattern matching and making get and post requests.
+
+  	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Moodle update}   
+  	\begin{itemize}
+	\justifying
+	\item The function checks for all recent actvity on a moodle homepage 
+	\item packages used: urllib, urllib2, re, cookielib 
+	\item given a username-password, it scrapes the webpages for all the courses of that person and return recent activity on the course page. 
+  	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Data flow}   
+  	\begin{itemize}
+	\justifying
+	\item A php script sits at homepages.iitb.ac.in.
+	\item The sms layer code in the google app engine receives a request via textweb
+	\item This code sends the request to the php script @ homepages \color{red} $\leftarrow$ (Re-routing)
+	\item \color{black} The php script sends it using curl to the localhost where all the python scripts are located
+  	\item The corresponding python code is run to generate the required output
+	\item This output is sent back to the sms layer code in google app engine
+	\item Google app engine sends it back to textweb which converts it to sms and sends it to the requestor
+	\end{itemize}
+\end{frame}
+
+
+
+\end{document}
