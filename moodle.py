@@ -1,9 +1,9 @@
 def moodle_updates(username,password):
 	
-	import urllib, urllib2, cookielib, mechanize, os, re, getpass
-	from BeautifulSoup import BeautifulSoup
+	import urllib, urllib2, cookielib, re, getpass
+	proxy_support=urllib2.ProxyHandler({})
 	cj = cookielib.CookieJar()
-	opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+	opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj), proxy_support)
 	login_data = urllib.urlencode({'username':username, 'password': password })
 	opener.open('http://moodle.iitb.ac.in/login/index.php', login_data)
 	returnvalue=""

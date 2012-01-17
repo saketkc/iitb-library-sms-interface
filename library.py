@@ -2,8 +2,6 @@ import httplib2
 import urllib
 from BeautifulSoup import BeautifulSoup
 import re
-
-
 def library_info(username,password):
 	http = httplib2.Http()
 	url = 'http://asc.iitb.ac.in/academic/commjsp/ldaplogin.jsp'   
@@ -23,12 +21,11 @@ def library_info(username,password):
 	regexp_dates = re.compile("\d\d\/\d\d\/\d\d\d\d")
 	book_names= regexp.findall(str(all_contents))
 	book_dates = regexp_dates.findall(str(all_contents))
-	for i in range(0,len(book_names)):
-	    book_names[i]=book_names[i].replace("<font face=\"Arial\" size=\"2\">","")
-	    book_names[i]=book_names[i].replace("</font>","")
-	    book_names[i]=book_names[i].replace("<br>","")
+#	for i in range(0,len(book_names)):
+#	    book_names[i]=book_names[i].replace("<font face=\"Arial\" size=\"2\">","")
+#	    book_names[i]=book_names[i].replace("</font>","")
+#	    book_names[i]=book_names[i].replace("<br>","")
 	all_info=""
-	for i in range(0,len(book_names)):
-	    all_info += book_names[i] + "=>"  + book_dates[2*i+1] + "\n"
-	return all_info
-
+#	for i in range(0,len(book_names)):
+#	    all_info += book_names[i] + "=>"  + book_dates[2*i+1] + "\n"
+	print book_dates

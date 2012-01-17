@@ -25,4 +25,4 @@ def return_grading_statistics(dept,code,year):
 def get_moodle_updates(username,password):
     return moodle_updates(username,password)
 if __name__ == "__main__":
-    app.run('10.5.10.12',debug=True)
+    app.run('10.102.152.23',debug=True)
