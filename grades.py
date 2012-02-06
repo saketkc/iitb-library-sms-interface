@@ -52,5 +52,6 @@ def get_grades(username,password,semester):
 				count = 0
 
 	return grades
+
 if __name__=="__main__":
-    print get_grades("saket.Kumar","thisisit1314.",2)
+    print get_grades("ldapid","ldappassword.",2)
