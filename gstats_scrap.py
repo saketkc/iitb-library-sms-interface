@@ -38,4 +38,4 @@ def gstats(dept,code,year) :
 	else :
 		return out
 if __name__ == "__main__" :
-	print gstats('CS 191 2010')
+	print gstats('CS','101','2010')
